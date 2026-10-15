@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6554d9">
+<meta name="description" content="Spielerisch Plus und Minus bis 100 üben.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Rechen-Abenteuer 2.0</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f4f1ff,#17152a);--panel:light-dark(#fff,#26233d);--ink:light-dark(#282343,#f5f2ff);--muted:light-dark(#706b87,#c0bad8);--purple:#6554d9;--soft:light-dark(#e9e5ff,#393354);--line:light-dark(#ded9f7,#514a70)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,sans-serif}
+main{max-width:600px;margin:auto;padding:14px 14px 28px}.hero{background:var(--purple);color:white;padding:20px;border-radius:20px;text-align:center}
+h1{font-size:26px;margin:4px 0}h2{font-size:21px;margin:0 0 12px}p{line-height:1.45}.stars{font-size:24px;margin-top:8px}
+.panel{background:var(--panel);border-radius:16px;padding:16px;margin-top:12px;box-shadow:0 2px 10px #0000000a}
+.btn{border:0;border-radius:12px;padding:13px 15px;background:var(--purple);color:white;font-weight:750;font-size:16px;cursor:pointer;min-height:46px}
+.btn.alt{background:var(--soft);color:var(--ink)}.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #edb949;outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions .btn{flex:1}
+.question{font-size:44px;font-weight:850;text-align:center;padding:18px 0}
+input,select{width:100%;font-size:19px;padding:12px;border:2px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink)}
+.muted{color:var(--muted);font-size:14px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--soft);border-radius:12px;padding:12px 5px;text-align:center}.stat strong{display:block;font-size:23px}
+.hidden{display:none!important}.feedback{font-weight:750;min-height:28px;text-align:center;padding-top:8px}
+.topline{display:flex;justify-content:space-between;gap:8px;font-weight:750}.bar{height:9px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:8px}.bar span{display:block;height:100%;background:var(--purple);width:0}
+label{display:block;font-weight:700;margin-top:12px}.note{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body><main id="app">
+<header class="hero"><div style="font-size:34px">🚀 ⭐ 🪐</div><h1>Rechen-Abenteuer</h1><p>Rechnen, Sterne sammeln und Mathe meistern!</p><div class="stars">⭐ <b id="stars">0</b> Sterne</div></header>
+<section id="home" class="panel"><h2>Bereit für dein Abenteuer?</h2><p>🕒 Eine Runde dauert 5 Minuten.</p><p>➕ Plus und ➖ Minus bis 100.</p><div class="actions"><button class="btn" id="start">Los geht's! 🚀</button><button class="btn alt" id="parent">👨‍👩‍👧 Elternbereich</button></div><p class="muted" id="last">Dein Abenteuer wartet!</p></section>
+<section id="game" class="panel hidden"><div class="topline"><span>⏱️ <span id="time">5:00</span></span><span>Aufgabe <span id="count">1</span></span></div><div class="bar"><span id="progress"></span></div><div class="question" id="question">12 + 8 = ?</div><form id="form"><input id="answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Deine Antwort" aria-label="Deine Antwort" required><div class="actions"><button class="btn" style="width:100%" type="submit">Antwort prüfen ✓</button></div></form><div class="feedback" id="feedback" aria-live="polite"></div><p class="muted" style="text-align:center">Jede richtige Antwort bringt dir einen Stern!</p><button class="btn alt" id="stop" style="width:100%;margin-top:8px">Runde beenden</button></section>
+<section id="result" class="panel hidden"><h2>🎉 Toll gemacht!</h2><div class="stats"><div class="stat"><strong id="r-correct">0</strong><span>Richtig</span></div><div class="stat"><strong id="r-total">0</strong><span>Versuche</span></div><div class="stat"><strong id="r-stars">0</strong><span>Sterne neu</span></div></div><p id="result-msg"></p><div class="actions"><button class="btn" id="again">Nochmal spielen</button><button class="btn alt" id="home-btn">Startseite</button></div></section>
+<section id="parents" class="panel hidden"><h2>👨‍👩‍👧 Elternbereich</h2><p class="muted">Lernstatistik aus diesem Browser auf diesem Gerät.</p><div class="stats"><div class="stat"><strong id="p-stars">0</strong><span>Sterne</span></div><div class="stat"><strong id="p-rounds">0</strong><span>Runden</span></div><div class="stat"><strong id="p-accuracy">—</strong><span>Trefferquote</span></div></div><div class="panel" style="background:var(--bg)"><p><b>Plus-Aufgaben</b> <span id="plus-label" style="float:right">0 richtig</span></p><div class="bar"><span id="plus-bar"></span></div><p><b>Minus-Aufgaben</b> <span id="minus-label" style="float:right">0 richtig</span></p><div class="bar"><span id="minus-bar"></span></div></div><label for="ops">Aufgabenarten</label><select id="ops"><option value="both">Plus und Minus</option><option value="plus">Nur Plus</option><option value="minus">Nur Minus</option></select><label for="level">Zahlenbereich</label><select id="level"><option value="100">Zahlen bis 100</option><option value="20">Zahlen bis 20</option><option value="50">Zahlen bis 50</option></select><p class="note" id="save-note">Lernstand wird lokal im Browser gespeichert. Exportiere regelmäßig eine Sicherung.</p><div class="actions"><button class="btn" id="export">Statistik exportieren</button><button class="btn alt" id="import-btn">Sicherung importieren</button><input id="import-file" class="hidden" type="file" accept="application/json,.json"></div><button class="btn alt" id="back" style="width:100%;margin-top:10px">Zurück</button><button class="btn alt" id="reset" style="width:100%;margin-top:10px">Statistik zurücksetzen</button></section>
+<p class="note" style="text-align:center;padding:10px">Tipp: Im Chrome-Menü kann „Zum Startbildschirm hinzufügen“ angeboten werden. Für eine zuverlässige Installation als Web-App ist eine gehostete Version erforderlich.</p>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),key='rechen-abenteuer-standalone-v1';
+let data={stars:0,rounds:[],settings:{ops:'both',level:'100'}},game=null,timer=null,advance=null;
+try{const v=JSON.parse(localStorage.getItem(key)||'null');if(v&&typeof v==='object')data={...data,...v,settings:{...data.settings,...(v.settings||{})}}}catch(e){}
+function save(){try{localStorage.setItem(key,JSON.stringify(data));$('save-note').textContent='Lernstand wird lokal im Browser gespeichert. Exportiere regelmäßig eine Sicherung.'}catch(e){$('save-note').textContent='Lokales Speichern ist nicht verfügbar. Bitte exportiere deine Statistik zur Sicherung.'}}
+function show(name){['home','game','result','parents'].forEach(n=>$(n).classList.toggle('hidden',n!==name))}
+function refresh(){ $('stars').textContent=data.stars;let n=data.rounds.length;$('last').textContent=n?`Bisher ${n} Übungsrunde${n===1?'':'n'} geschafft. Weiter so!`:'Dein Abenteuer wartet!'}
+function question(){let max=Number(data.settings.level)||100,a=Math.floor(Math.random()*(max+1)),b=Math.floor(Math.random()*(max+1)),op=data.settings.ops==='plus'?'+':data.settings.ops==='minus'?'-':Math.random()<.5?'+':'-';if(op==='-'&&b>a)[a,b]=[b,a];return{a,b,op,answer:op==='+'?a+b:a-b}}
+function next(){if(!game)return;game.q=question();$('question').textContent=`${game.q.a} ${game.q.op} ${game.q.b} = ?`;$('answer').value='';$('feedback').textContent='';$('count').textContent=game.answered+1;$('answer').focus()}
+function clock(){let s=Math.max(0,game.seconds);$('time').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;$('progress').style.width=((300-s)/300*100)+'%'}
+function start(){clearInterval(timer);clearTimeout(advance);game={seconds:300,answered:0,correct:0,plus:0,plusCorrect:0,minus:0,minusCorrect:0,q:null};show('game');clock();next();timer=setInterval(()=>{if(!game)return;game.seconds--;clock();if(game.seconds<=0)finish()},1000)}
+function finish(){if(!game)return;clearInterval(timer);clearTimeout(advance);timer=null;let g=game;game=null;data.stars+=g.correct;data.rounds.push({date:new Date().toISOString(),answered:g.answered,correct:g.correct,plus:g.plus,plusCorrect:g.plusCorrect,minus:g.minus,minusCorrect:g.minusCorrect,seconds:300-g.seconds});save();refresh();$('r-correct').textContent=g.correct;$('r-total').textContent=g.answered;$('r-stars').textContent=g.correct;$('result-msg').textContent=g.answered?`Du hast ${Math.round(g.correct/g.answered*100)} % richtig beantwortet. Jeder Versuch hilft dir beim Lernen!`:'Gut, dass du es ausprobiert hast! Starte gleich eine neue Runde.';show('result')}
+function parents(){let n=0,c=0,p=0,pc=0,m=0,mc=0;data.rounds.forEach(r=>{n+=r.answered||0;c+=r.correct||0;p+=r.plus||0;pc+=r.plusCorrect||0;m+=r.minus||0;mc+=r.minusCorrect||0});$('p-stars').textContent=data.stars;$('p-rounds').textContent=data.rounds.length;$('p-accuracy').textContent=n?Math.round(c/n*100)+'%':'—';$('plus-label').textContent=`${pc} / ${p} richtig`;$('minus-label').textContent=`${mc} / ${m} richtig`;$('plus-bar').style.width=(p?pc/p*100:0)+'%';$('minus-bar').style.width=(m?mc/m*100:0)+'%';$('ops').value=data.settings.ops;$('level').value=data.settings.level;show('parents')}
+$('start').onclick=start;$('again').onclick=start;$('home-btn').onclick=()=>show('home');$('parent').onclick=parents;$('back').onclick=()=>show('home');$('stop').onclick=finish;
+$('ops').onchange=e=>{data.settings.ops=e.target.value;save()};$('level').onchange=e=>{data.settings.level=e.target.value;save()};
+$('form').onsubmit=e=>{e.preventDefault();if(!game||$('answer').value.trim()==='')return;let g=game;g.answered++;if(g.q.op==='+')g.plus++;else g.minus++;if(Number($('answer').value)===g.q.answer){g.correct++;if(g.q.op==='+')g.plusCorrect++;else g.minusCorrect++;$('feedback').textContent='Richtig! ⭐ Super gemacht!';$('feedback').style.color='#24834d'}else{$('feedback').textContent=`Fast! Die richtige Antwort ist ${g.q.answer}.`;$('feedback').style.color='#d17a42'}$('count').textContent=g.answered;clearTimeout(advance);advance=setTimeout(()=>{if(game)next()},700)};
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rechen-abenteuer-sicherung.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)};
+$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const v=JSON.parse(await f.text());if(typeof v.stars!=='number'||!Array.isArray(v.rounds))throw Error();data={stars:Math.max(0,v.stars),rounds:v.rounds,settings:{ops:['both','plus','minus'].includes(v.settings?.ops)?v.settings.ops:'both',level:['20','50','100'].includes(String(v.settings?.level))?String(v.settings.level):'100'}};save();refresh();parents();alert('Sicherung erfolgreich importiert.')}catch(err){alert('Diese Datei konnte nicht als Rechen-Abenteuer-Sicherung gelesen werden.')}e.target.value=''};
+$('reset').onclick=()=>{if(confirm('Alle Sterne und Übungsrunden wirklich löschen?')){data={stars:0,rounds:[],settings:{ops:$('ops').value,level:$('level').value}};save();refresh();parents()}};refresh();
+})();
+</script><script>if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }</script>
+</body></html>

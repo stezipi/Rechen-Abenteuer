@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Rechen-Abenteuer 2.0",
+  "short_name": "Rechen-Abenteuer",
+  "description": "Spielerisch Plus und Minus bis 100 üben.",
+  "lang": "de-DE",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f1ff",
+  "theme_color": "#6554d9",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
